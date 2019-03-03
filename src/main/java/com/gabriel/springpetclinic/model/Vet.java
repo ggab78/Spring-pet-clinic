@@ -1,0 +1,4 @@
+package com.gabriel.springpetclinic.model;
+
+public class Vet extends Person {
+}
