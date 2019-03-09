@@ -1,15 +1,26 @@
 package com.gabriel.springpetclinic.services.map;
 
 import com.gabriel.springpetclinic.model.Owner;
-import com.gabriel.springpetclinic.services.CrudService;
+import com.gabriel.springpetclinic.services.OwnerService;
 
 import java.util.Set;
 
-public class OwnerServiceMap extends AbstractMapService<Owner,Long> implements CrudService<Owner, Long> {
+
+public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements OwnerService {
+
+    @Override
+    public Owner findByLastName(String lastName) {
+        for (Owner o : map.values()) {
+            if(o.getLastName().equals(lastName)){
+                return o;
+            }
+        }
+        return null;
+    }
 
     @Override
     public Owner save(Owner object) {
-        return super.save(object.getId(),object);
+        return super.save(object.getId(), object);
     }
 
     @Override
@@ -28,7 +39,7 @@ public class OwnerServiceMap extends AbstractMapService<Owner,Long> implements C
     }
 
     @Override
-    public void deleteById(Long aLong) {
-        super.deleteById(aLong);
+    public void deleteById(Long id) {
+        super.deleteById(id);
     }
 }
