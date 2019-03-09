@@ -21,16 +21,16 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Owner owner = new Owner(1L,"mat","gam");
+        Owner owner = new Owner("mat","gam");
         ownerService.save(owner);
-        owner = new Owner(2L,"gab","gam");
+        owner = new Owner("gab","gam");
         ownerService.save(owner);
 
         System.out.println("Owners loaded");
 
-        Vet vet = new Vet(1L,"tom","kos");
+        Vet vet = new Vet("tom","kos");
         vetService.save(vet);
-        vet = new Vet(2L,"tim","moine");
+        vet = new Vet("tim","moine");
         vetService.save(vet);
 
         System.out.println("Vets loaded");
