@@ -1,9 +1,6 @@
 package com.gabriel.springpetclinic.bootstrap;
 
-import com.gabriel.springpetclinic.model.Owner;
-import com.gabriel.springpetclinic.model.Pet;
-import com.gabriel.springpetclinic.model.PetType;
-import com.gabriel.springpetclinic.model.Vet;
+import com.gabriel.springpetclinic.model.*;
 import com.gabriel.springpetclinic.services.OwnerService;
 import com.gabriel.springpetclinic.services.PetTypeService;
 import com.gabriel.springpetclinic.services.VetService;
@@ -74,9 +71,20 @@ public class DataLoader implements CommandLineRunner {
 
         System.out.println("Owners loaded");
 
+
+//first vet
         Vet vet = new Vet("tom","kos");
+        Speciality speciality = new Speciality();
+        speciality.setDescription("dentist");
+        vet.getSpecialities().add(speciality);
         vetService.save(vet);
+
+
+//second vet
         vet = new Vet("tim","moine");
+        speciality = new Speciality();
+        speciality.setDescription("surgeon");
+        vet.getSpecialities().add(speciality);
         vetService.save(vet);
 
         System.out.println("Vets loaded");
