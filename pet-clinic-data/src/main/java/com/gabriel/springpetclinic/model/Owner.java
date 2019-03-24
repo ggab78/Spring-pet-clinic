@@ -1,16 +1,21 @@
 package com.gabriel.springpetclinic.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 public class Owner extends Person {
 
 
     private String address;
     private String city;
     private String telephone;
-    private Set<Pet> pets = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    private Set<Pet> pets = new HashSet<>();
 
     public Owner() {
     }
@@ -51,5 +56,10 @@ public class Owner extends Person {
 
     public void setPets(Set<Pet> pets) {
         this.pets = pets;
+    }
+
+    public void addPet(Pet pet){
+        pet.setOwner(this);
+        this.pets.add(pet);
     }
 }
