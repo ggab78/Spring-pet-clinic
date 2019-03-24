@@ -25,13 +25,10 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-
         int count = petTypeService.findAll().size();
         if(count==0){
             loadData();
         }
-
-
     }
 
     private void loadData() {
@@ -51,9 +48,11 @@ public class DataLoader implements CommandLineRunner {
         pet.setPetType(savedDogPetType);
         pet.setBirthDate(LocalDate.now());
         pet.setName("Hugo");
-        pet.setOwner(owner);
-        owner.getPets().add(pet);
+        //pet.setOwner(owner);
+        owner.addPet(pet);
         ownerService.save(owner);
+
+
 //seond owner
         owner = new Owner("gab","gam");
         owner.setAddress("traugutta3");
@@ -66,6 +65,7 @@ public class DataLoader implements CommandLineRunner {
         pet.setOwner(owner);
         owner.getPets().add(pet);
         ownerService.save(owner);
+
 //third owner
         owner = new Owner("ewa","lewa");
         owner.setAddress("traugutta2");
@@ -96,7 +96,10 @@ public class DataLoader implements CommandLineRunner {
         speciality.setDescription("surgeon");
         vet.getSpecialities().add(speciality);
         vetService.save(vet);
-
         System.out.println("Vets loaded");
+    }
+
+    public OwnerService getOwnerService() {
+        return ownerService;
     }
 }
