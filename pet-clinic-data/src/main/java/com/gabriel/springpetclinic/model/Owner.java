@@ -61,6 +61,7 @@ public class Owner extends Person {
 
     public void addPet(Pet pet){
         pet.setOwner(this);
+        System.out.println("Owner name = " + pet.getOwner().getLastName());
         this.pets.add(pet);
     }
 }

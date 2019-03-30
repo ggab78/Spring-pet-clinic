@@ -85,7 +85,7 @@ public class DataLoader implements CommandLineRunner {
         pet.setBirthDate(LocalDate.of(2018,5,7));
         pet.setName("Hugo1");
         //pet.setOwner(owner);
-        owner.getPets().add(pet);
+        owner.addPet(pet);
         petService.save(pet);
         ownerService.save(owner);
 
@@ -115,25 +115,6 @@ public class DataLoader implements CommandLineRunner {
         visit.setPet(pet);
         visitService.save(visit);
 
-    }
-
-    public OwnerService getOwnerService() {
-        return ownerService;
-    }
-    public PetService getPetService() {
-        return petService;
-    }
-    public PetTypeService getPetTypeService() {
-        return petTypeService;
-    }
-    public SpecialityService getSpecialityService() {
-        return specialityService;
-    }
-    public VetService getVetService() {
-        return vetService;
-    }
-    public VisitService getVisitService() {
-        return visitService;
     }
 
 }

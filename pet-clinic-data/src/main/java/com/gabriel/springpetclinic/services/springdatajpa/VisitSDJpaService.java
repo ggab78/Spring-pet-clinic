@@ -23,12 +23,8 @@ public class VisitSDJpaService implements VisitService {
 
     @Override
     public Visit save(Visit object) {
-        if(object.getPet()==null || object.getPet().getOwner() == null || object.getPet().getId()==null
-                || object.getPet().getOwner().getId()==null){
-            throw new RuntimeException("Invalid visit");
-        }else {
-            return visitRepository.save(object);
-        }
+        return visitRepository.save(object);
+
     }
 
     @Override
