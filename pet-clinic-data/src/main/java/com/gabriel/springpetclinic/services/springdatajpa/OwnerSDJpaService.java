@@ -2,6 +2,8 @@ package com.gabriel.springpetclinic.services.springdatajpa;
 
 import com.gabriel.springpetclinic.model.Owner;
 import com.gabriel.springpetclinic.repositories.OwnerRepository;
+import com.gabriel.springpetclinic.repositories.PetRepository;
+import com.gabriel.springpetclinic.repositories.PetTypeRepository;
 import com.gabriel.springpetclinic.services.OwnerService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,13 @@ import java.util.Set;
 public class OwnerSDJpaService implements OwnerService {
 
     private final OwnerRepository ownerRepository;
+    private final PetTypeRepository petTypeRepository;
+    private final PetRepository petRepository;
 
-    public OwnerSDJpaService(OwnerRepository ownerRepository) {
+    public OwnerSDJpaService(OwnerRepository ownerRepository, PetTypeRepository petTypeRepository, PetRepository petRepository) {
         this.ownerRepository = ownerRepository;
+        this.petTypeRepository = petTypeRepository;
+        this.petRepository = petRepository;
     }
 
     @Override
@@ -27,6 +33,20 @@ public class OwnerSDJpaService implements OwnerService {
 
     @Override
     public Owner save(Owner object) {
+        if (object.getPets() != null) {
+            object.getPets().forEach(pet -> {
+                if (pet.getPetType() != null) {
+                    if (pet.getPetType().getId() == null) {
+                        pet.setPetType(petTypeRepository.save(pet.getPetType()));
+                    }
+                }else{
+                    throw new RuntimeException("Pet must have Type");
+                }
+                if(pet.getId()==null){
+                    petRepository.save(pet);
+                }
+            });
+        }
         return ownerRepository.save(object);
     }
 

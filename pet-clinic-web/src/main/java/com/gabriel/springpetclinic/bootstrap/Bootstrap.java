@@ -38,7 +38,7 @@ private final DataLoader dataLoader;
             System.out.println(visit.getDescription());
         }
         //petTypeRepository.saveAll(dataLoader.getPetTypeService().findAll());
-        ownerRepository.saveAll(dataLoader.getOwnerService().findAll());
+        //ownerRepository.saveAll(dataLoader.getOwnerService().findAll());
         //petRepository.saveAll(dataLoader.getPetService().findAll());
         //visitRepository.saveAll(dataLoader.getVisitService().findAll());
 

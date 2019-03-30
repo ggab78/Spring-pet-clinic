@@ -1,6 +1,7 @@
 package com.gabriel.springpetclinic.bootstrap;
 
 import com.gabriel.springpetclinic.model.*;
+import com.gabriel.springpetclinic.repositories.OwnerRepository;
 import com.gabriel.springpetclinic.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,8 @@ public class DataLoader implements CommandLineRunner {
     private final SpecialityService specialityService;
     private final VisitService visitService;
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, PetService petService, SpecialityService specialityService, VisitService visitService) {
+
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, PetService petService, SpecialityService specialityService, VisitService visitService, OwnerRepository ownerRepository) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
@@ -28,12 +30,13 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         int count = petTypeService.findAll().size();
-        if(count==0){
+        if(count==0) {
             loadData();
         }
     }
+
+
 
     public void loadData() {
         PetType dog = new PetType();
@@ -41,7 +44,7 @@ public class DataLoader implements CommandLineRunner {
         PetType savedDogPetType = petTypeService.save(dog);
 
         PetType cat = new PetType();
-        dog.setName("cat");
+        cat.setName("cat");
         PetType savedCatPetType = petTypeService.save(cat);
 // first owner
         Owner owner = new Owner("mat","gam");
@@ -58,7 +61,7 @@ public class DataLoader implements CommandLineRunner {
         ownerService.save(owner);
 
 
-//seond owner
+//second owner
         owner = new Owner("gab","gam");
         owner.setAddress("traugutta3");
         owner.setCity("DG");
