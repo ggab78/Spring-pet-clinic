@@ -1,14 +1,15 @@
 package com.gabriel.springpetclinic.bootstrap;
 
 import com.gabriel.springpetclinic.model.*;
-import com.gabriel.springpetclinic.repositories.OwnerRepository;
 import com.gabriel.springpetclinic.services.*;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 @Component
+@AllArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
     private final OwnerService ownerService;
@@ -19,15 +20,6 @@ public class DataLoader implements CommandLineRunner {
     private final VisitService visitService;
 
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, PetService petService, SpecialityService specialityService, VisitService visitService, OwnerRepository ownerRepository) {
-        this.ownerService = ownerService;
-        this.vetService = vetService;
-        this.petTypeService = petTypeService;
-        this.petService = petService;
-        this.specialityService = specialityService;
-        this.visitService = visitService;
-    }
-
     @Override
     public void run(String... args) throws Exception {
         int count = petTypeService.findAll().size();
@@ -35,8 +27,6 @@ public class DataLoader implements CommandLineRunner {
             loadData();
         }
     }
-
-
 
     public void loadData() {
         PetType dog = new PetType();
@@ -118,5 +108,4 @@ public class DataLoader implements CommandLineRunner {
         visitService.save(visit);
 
     }
-
 }
