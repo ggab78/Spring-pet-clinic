@@ -63,6 +63,12 @@
             <!--<version>${junit5.version}</version>-->
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>2.23.4</version>
+            <scope>test</scope>
+        </dependency>
         <!--junit.vintage need to be added if junt4 test are implemented-->
         <!--<dependency>-->
             <!--<groupId>org.junit.vintage</groupId>-->

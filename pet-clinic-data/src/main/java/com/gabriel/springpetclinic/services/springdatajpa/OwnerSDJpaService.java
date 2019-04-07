@@ -2,9 +2,8 @@ package com.gabriel.springpetclinic.services.springdatajpa;
 
 import com.gabriel.springpetclinic.model.Owner;
 import com.gabriel.springpetclinic.repositories.OwnerRepository;
-import com.gabriel.springpetclinic.repositories.PetRepository;
-import com.gabriel.springpetclinic.repositories.PetTypeRepository;
 import com.gabriel.springpetclinic.services.OwnerService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +12,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 @Profile("springdatajpa")
 public class OwnerSDJpaService implements OwnerService {
 
     private final OwnerRepository ownerRepository;
-    private final PetTypeRepository petTypeRepository;
-    private final PetRepository petRepository;
-
-    public OwnerSDJpaService(OwnerRepository ownerRepository, PetTypeRepository petTypeRepository, PetRepository petRepository) {
-        this.ownerRepository = ownerRepository;
-        this.petTypeRepository = petTypeRepository;
-        this.petRepository = petRepository;
-    }
 
     @Override
     public Owner findByLastName(String lastName) {
