@@ -1,21 +1,29 @@
 package com.gabriel.springpetclinic.services.map;
 
 import com.gabriel.springpetclinic.model.Owner;
+import com.gabriel.springpetclinic.model.Pet;
+import com.gabriel.springpetclinic.model.PetType;
 import com.gabriel.springpetclinic.services.PetService;
 import com.gabriel.springpetclinic.services.PetTypeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-
+@ExtendWith(MockitoExtension.class)
 class OwnerServiceMapTest {
 
-    OwnerServiceMap ownerServiceMap;
+
 
     @Mock
     PetService petService;
@@ -23,13 +31,14 @@ class OwnerServiceMapTest {
     @Mock
     PetTypeService petTypeService;
 
+    @InjectMocks
+    OwnerServiceMap ownerServiceMap;
+
     final Long ownerId = 1L;
     final String lastName = "smith";
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
-        ownerServiceMap = new OwnerServiceMap(petService, petTypeService);
         ownerServiceMap.save(Owner.builder().id(ownerId).lastName(this.lastName).build());
     }
 
@@ -66,9 +75,32 @@ class OwnerServiceMapTest {
 
     @Test
     void save() {
-        Owner owner = Owner.builder().lastName("XXX").build();
-        assertEquals("XXX", ownerServiceMap.save(owner).getLastName());
-        assertNotNull(ownerServiceMap.save(owner).getId());
+
+        //create PetType with null id
+        PetType returnedPetType = PetType.builder().name("dog").build();
+
+        //create Pet with null id
+        Pet returnedPet = Pet.builder().name("Hugo").petType(returnedPetType).build();
+
+        Set<Pet> pets = new HashSet<>();
+        pets.add(returnedPet);
+
+        Owner owner = Owner.builder().lastName("XXX").pets(pets).build();
+
+        //when(petService.save(any())).thenReturn(returnedPet);
+        //when(petTypeService.save(any())).thenReturn(returnedPetType);
+
+        Owner savedOwner = ownerServiceMap.save(owner);
+
+        assertEquals(2,ownerServiceMap.findAll().size());//in setUp method first Owner is saved
+        assertEquals("XXX", savedOwner.getLastName());
+        assertNotNull(savedOwner.getId());
+        assertEquals(1, savedOwner.getPets().size());
+
+        verify(petService,times(1)).save(any());
+        verify(petTypeService,times(1)).save(any());
+
     }
+
 
 }
