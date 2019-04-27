@@ -86,8 +86,7 @@ private final OwnerService ownerService;
             existingOwner.setCity(source.getCity());
             existingOwner.setTelephone(source.getTelephone());
             existingOwner.setAddress(source.getAddress());
-            Owner savedOwner = ownerService.save(existingOwner);
-            return "redirect:/owners/"+savedOwner.getId();
+            return "redirect:/owners/"+existingOwner.getId();
         }
     }
 
