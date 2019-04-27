@@ -8,9 +8,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RequestMapping({"/owners"})
@@ -64,6 +66,44 @@ private final OwnerService ownerService;
             // multiple owners found
             model.addAttribute("selections", results);
             return "owners/ownersList";
+        }
+    }
+
+    @RequestMapping("/{ownerId}/edit")
+    public String editOwner(@PathVariable Long ownerId, Model model) {
+        model.addAttribute("owner", ownerService.findById(ownerId));
+        return "owners/createOrUpdateOwnerForm";
+    }
+
+    @PostMapping("/{ownerId}/edit")
+    public String editOwnerProcess(@Valid Owner source, @PathVariable Long ownerId, BindingResult result) {
+        if(result.hasErrors()){
+            return "owners/createOrUpdateOwnerForm";
+        }else{
+            Owner existingOwner = ownerService.findById(ownerId);
+            existingOwner.setFirstName(source.getFirstName());
+            existingOwner.setLastName(source.getLastName());
+            existingOwner.setCity(source.getCity());
+            existingOwner.setTelephone(source.getTelephone());
+            existingOwner.setAddress(source.getAddress());
+            Owner savedOwner = ownerService.save(existingOwner);
+            return "redirect:/owners/"+savedOwner.getId();
+        }
+    }
+
+    @RequestMapping("/new")
+    public String newOwner(Model model) {
+        model.addAttribute("owner", new Owner());
+        return "owners/createOrUpdateOwnerForm";
+    }
+
+    @PostMapping("/new")
+    public String newOwnerProcess(@Valid Owner source, BindingResult result) {
+        if(result.hasErrors()){
+            return "owners/createOrUpdateOwnerForm";
+        }else{
+        Owner savedOwner = ownerService.save(source);
+        return "redirect:/owners/"+savedOwner.getId();
         }
     }
 }
