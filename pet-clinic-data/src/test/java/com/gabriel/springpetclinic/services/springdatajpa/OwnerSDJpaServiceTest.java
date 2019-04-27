@@ -115,4 +115,16 @@ class OwnerSDJpaServiceTest {
         ownerSDJpaService.deleteById(1L);
         verify(ownerRepository, times(1)).deleteById(anyLong());
     }
+
+    @Test
+    void findAllByLastNameContainingIgnoringCaseNoOwners() {
+
+        Set<Owner> returnedOwners = new HashSet<>();
+        returnedOwners.add(returnOwner);
+        when(ownerRepository.findAllByLastNameContainingIgnoringCase(anyString())).thenReturn(returnedOwners);
+
+        assertEquals(1, ownerSDJpaService.findAllByLastNameContainingIgnoringCase("").size());
+        verify(ownerRepository, times(1)).findAllByLastNameContainingIgnoringCase(anyString());
+
+    }
 }
