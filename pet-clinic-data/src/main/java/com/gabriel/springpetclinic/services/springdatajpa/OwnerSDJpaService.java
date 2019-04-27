@@ -54,4 +54,12 @@ public class OwnerSDJpaService implements OwnerService {
     public void deleteById(Long aLong) {
         ownerRepository.deleteById(aLong);
     }
+
+    @Override
+    public Set<Owner> findAllByLastNameContainingIgnoringCase(String lastName) {
+
+        Set<Owner> owners = new HashSet<>();
+        owners = ownerRepository.findAllByLastNameContainingIgnoringCase(lastName);
+        return owners;
+    }
 }

@@ -11,11 +11,4 @@ public class IndexController {
         return "index";
     }
 
-
-    @RequestMapping({"/owners/find","/oups"})
-    public String notImplemented() {
-        return "notImplemented";
-    }
-
-
 }

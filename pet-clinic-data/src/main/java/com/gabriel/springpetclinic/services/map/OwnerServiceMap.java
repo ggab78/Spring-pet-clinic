@@ -7,6 +7,9 @@ import com.gabriel.springpetclinic.services.PetTypeService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Service
 @Profile({"default", "map"})
@@ -31,6 +34,18 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
     }
 
     @Override
+    public Set<Owner> findAllByLastNameContainingIgnoringCase(String lastName) {
+        Set<Owner> owners = new HashSet<>();
+        for (Owner o : map.values()) {
+            if(o.getLastName().equals(lastName)){
+                owners.add(o);
+            }
+        }
+        return owners;
+        //todo ContainingIgnoringCase functionality needs to be introduced
+    }
+
+    @Override
     public Owner save(Owner object) {
         if(object!=null){
             if (object.getPets()!=null){
@@ -52,24 +67,5 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
         }
         return super.save(object);
     }
-//
-//    @Override
-//    public Owner findById(Long id) {
-//        return super.findById(id);
-//    }
-//
-//    @Override
-//    public Set findAll() {
-//        return super.findAll();
-//    }
-//
-//    @Override
-//    public void delete(Owner object) {
-//        super.delete(object);
-//    }
-//
-//    @Override
-//    public void deleteById(Long id) {
-//        super.deleteById(id);
-//    }
+
 }
