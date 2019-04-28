@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,5 +42,16 @@ public class Owner extends Person {
         pet.setOwner(this);
         System.out.println("Owner name = " + pet.getOwner().getLastName());
         this.pets.add(pet);
+    }
+
+    public Pet findPet(String name, LocalDate birthDate, PetType petType){
+
+        for(Pet pet : pets){
+            if(pet.getPetType().equals(petType) && pet.getName().equals(name) && pet.getBirthDate().equals(birthDate)){
+                return pet;
+            }
+
+        }
+        return null;
     }
 }
