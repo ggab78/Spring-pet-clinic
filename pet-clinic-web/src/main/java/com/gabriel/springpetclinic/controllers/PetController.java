@@ -72,7 +72,7 @@ public class PetController {
         } else {
             this.petService.save(pet);
             this.petTypeService.save(pet.getPetType());
-            return "redirect:/owners/{ownerId}";
+            return "redirect:/owners/"+owner.getId();
         }
     }
 }
