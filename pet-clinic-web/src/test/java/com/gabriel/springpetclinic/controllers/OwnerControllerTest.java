@@ -5,6 +5,7 @@ import com.gabriel.springpetclinic.services.OwnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,7 +22,6 @@ import java.util.Set;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -155,9 +155,7 @@ class OwnerControllerTest {
     void newOwnerProcess() throws Exception {
 
         Owner source = Owner.builder().id(9L).build();
-        when(ownerService.save(any())).thenReturn(source);
-
-        ownerController.newOwnerProcess(source, bindingResult);
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(source);
 
         mockMvc.perform(post("/owners/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -167,5 +165,6 @@ class OwnerControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/9"));
 
+        verify(ownerService).save(ArgumentMatchers.any());
     }
 }
