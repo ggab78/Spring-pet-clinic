@@ -23,7 +23,7 @@ public class Pet extends BaseEntity{
         this.owner=owner;
         this.petType=petType;
         this.birthDate=birthDate;
-        if(visits!=null) {
+        if(visits!=null || !visits.isEmpty()) {
             this.visits = visits;
         }
     }
@@ -43,11 +43,19 @@ public class Pet extends BaseEntity{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
     private Set<Visit> visits= new HashSet<>();
 
-    public boolean isNew(){
-        boolean isNew = false;
-        if(this.getId() == null){
-            isNew = true;
+
+
+    public void addVisit(Visit visit){
+        visit.setPet(this);
+        this.visits.add(visit);
+    }
+
+    public Visit findVisit(String description, LocalDate date){
+        for(Visit visit : visits){
+            if(visit.getDescription().equals(description) && visit.getDate().equals(date)){
+                return visit;
+            }
         }
-        return isNew;
+        return null;
     }
 }

@@ -95,8 +95,8 @@ class PetControllerTest {
 
     @Test
     void processNewPetFormSuccess() throws Exception {
-        when(petTypeService.save(ArgumentMatchers.any())).thenReturn(pet.getPetType());
-        when(petService.save(ArgumentMatchers.any())).thenReturn(pet);
+        //when(petTypeService.save(ArgumentMatchers.any())).thenReturn(pet.getPetType());
+        //when(petService.save(ArgumentMatchers.any())).thenReturn(pet);
         when(ownerService.findById(ArgumentMatchers.anyLong())).thenReturn(owner);
 
         petController.processNewPetForm(owner, pet, bindingResult, model);
@@ -162,7 +162,7 @@ class PetControllerTest {
                 .andExpect(view().name("redirect:/owners/1"));
 
         verify(petService,times(1)).findById(anyLong());
-
+        verify(petService,times(1)).save(any());
     }
 
     @Test

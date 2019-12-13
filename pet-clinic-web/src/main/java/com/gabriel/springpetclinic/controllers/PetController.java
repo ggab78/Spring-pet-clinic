@@ -50,6 +50,7 @@ public class PetController {
         dataBinder.setValidator(new PetValidator());
     }
 
+
     @RequestMapping("/pets/new")
     public String newPetForm(Owner owner, Model model) {
         Pet pet = new Pet();
@@ -71,7 +72,7 @@ public class PetController {
             return "pets/createOrUpdatePetForm";
         } else {
             this.petService.save(pet);
-            this.petTypeService.save(pet.getPetType());
+            //this.petTypeService.save(pet.getPetType());
             return "redirect:/owners/"+owner.getId();
         }
     }
@@ -95,7 +96,7 @@ public class PetController {
             actualPet.setBirthDate(pet.getBirthDate());
             actualPet.setPetType(pet.getPetType());
             this.petService.save(actualPet);
-            this.petTypeService.save(actualPet.getPetType());
+            //this.petTypeService.save(actualPet.getPetType());
             return "redirect:/owners/"+owner.getId();
         }
     }
