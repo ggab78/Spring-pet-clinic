@@ -170,8 +170,7 @@ class PetControllerTest {
 
         when(ownerService.findById(ArgumentMatchers.anyLong())).thenReturn(owner);
 
-        mockMvc.perform(post("/owners/1/pets/new")
-                .param("name", "Betty")
+        mockMvc.perform(post("/owners/1/pets/1/edit")
                 .param("birthDate", "2015-02-12")
         )
                 .andExpect(model().attributeHasNoErrors("owner"))

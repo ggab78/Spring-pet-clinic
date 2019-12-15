@@ -25,6 +25,7 @@ public class PetController {
     PetService petService;
     OwnerService ownerService;
 
+
     @ModelAttribute("types")
     public Collection<PetType> populatePetTypes() {
         return this.petTypeService.findAll();

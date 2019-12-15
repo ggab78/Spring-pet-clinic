@@ -5,8 +5,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDate;
-
 public class VisitValidator implements Validator {
 
     private static final String REQUIRED = "required";
@@ -19,9 +17,9 @@ public class VisitValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Visit visit = (Visit) obj;
-        String description = visit.getDescription();
+
         // description validation
-        if (!StringUtils.hasLength(description)) {
+        if (!StringUtils.hasLength(visit.getDescription())) {
             errors.rejectValue("description", REQUIRED, REQUIRED);
         }
 
@@ -31,9 +29,9 @@ public class VisitValidator implements Validator {
         }
 
         // birth date not later then
-        LocalDate now = LocalDate.now();
-        if(visit.getDate().compareTo(now)<0){
-            errors.rejectValue("date",REQUIRED, REQUIRED);
-        }
+//        LocalDate now = LocalDate.now();
+//        if(visit.getDate().compareTo(now)<0){
+//            errors.rejectValue("date",REQUIRED, REQUIRED);
+//        }
     }
 }
