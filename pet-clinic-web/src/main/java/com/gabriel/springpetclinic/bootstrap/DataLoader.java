@@ -102,7 +102,7 @@ public class DataLoader implements CommandLineRunner {
 
 //first visit
         Visit visit = new Visit();
-        visit.setDate(LocalDate.of(2019, 4, 7));
+        visit.setDate(LocalDate.of(2025, 4, 7));
         visit.setDescription("first visit");
         visit.setPet(pet);
         visitService.save(visit);

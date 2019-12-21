@@ -14,26 +14,34 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
+import java.time.LocalDate;
 
 @Slf4j
 @Controller
 @AllArgsConstructor
-@RequestMapping("/owners/{ownerId}/pets/{petId}")
+@RequestMapping("/owners/*/pets/{petId}")
 public class VisitController {
 
     private final PetService petService;
     private final VisitService visitService;
 
 
-    @InitBinder("pet")
-    public void setAllowedFields(WebDataBinder webDataBinder) {
-        webDataBinder.setDisallowedFields("id");
+    @InitBinder
+    public void setAllowedFields(WebDataBinder dataBinder) {
+        dataBinder.setDisallowedFields("id");
+        dataBinder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException{
+                setValue(LocalDate.parse(text));
+            }
+        });
     }
 
-    @InitBinder("visit")
-    public void initVisitBinder(WebDataBinder dataBinder) {
-        dataBinder.setValidator(new VisitValidator());
-    }
+//    @InitBinder("visit")
+//    public void initVisitBinder(WebDataBinder dataBinder) {
+//        dataBinder.setValidator(new VisitValidator());
+//    }
 
     @ModelAttribute("pet")
     public Pet findPet(@PathVariable Long petId) {
@@ -49,20 +57,27 @@ public class VisitController {
     }
 
     @PostMapping("/visits/new")
-    public String processNewVisitForm(@Valid Visit visit, Pet pet, BindingResult result, Model model){
-
-//        if (visit.isNew() && pet.findVisit(visit.getDescription(), visit.getDate()) != null){
-//            result.rejectValue("date", "duplicate", "already exists");
-//        }
+    public String processNewVisitForm(Pet pet, @Valid @ModelAttribute("visit") Visit visit, BindingResult result, Model model){
+//    log.debug(visit.getDescription());
+//    log.debug(visit.getDate().toString());
 
         if (result.hasErrors()) {
-            model.addAttribute("visit", visit);
+            model.addAttribute("pet",pet);
             return "pets/createOrUpdateVisitForm";
-        } else {
+        }
+
+        if (visit.isNew() && pet.findVisit(visit.getDescription(), visit.getDate()) != null){
+            result.rejectValue("date", "duplicate", "already exists");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("pet",pet);
+            return "pets/createOrUpdateVisitForm";
+        }
             pet.addVisit(visit);
             visitService.save(visit);
             return "redirect:/owners/"+pet.getOwner().getId();
-        }
+
     }
 
 }

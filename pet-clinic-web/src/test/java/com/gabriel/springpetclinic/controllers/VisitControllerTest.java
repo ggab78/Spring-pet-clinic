@@ -76,7 +76,7 @@ class VisitControllerTest {
 
     @Test
     void processNewVisitFormHasErrors() throws Exception {
-        when(petService.findById(anyLong())).thenReturn(pet);
+        //when(petService.findById(anyLong())).thenReturn(pet);
         //visitController.processNewVisitForm(visit,pet,bindingResult,model);
 
         mockMvc.perform(post("/owners/1/pets/1/visits/new")
@@ -84,12 +84,11 @@ class VisitControllerTest {
                 .param("date", "2020-01-01")
         )
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("visit"));
-//                .andExpect(model().attributeExists("pet"))
-//                .andExpect(model().attributeHasErrors("visit"))
-//                .andExpect(model().attributeHasFieldErrorCode("visit", "description", "required"))
-//
-//                .andExpect(view().name("pets/createOrUpdateVisitForm"));
+                .andExpect(model().attributeExists("visit"))
+                //.andExpect(model().attributeExists("pet"))
+                .andExpect(model().attributeHasErrors("visit"))
+                .andExpect(model().attributeHasFieldErrorCode("visit", "description", "required"))
+                .andExpect(view().name("pets/createOrUpdateVisitForm"));
     }
 
     @Test
@@ -111,6 +110,7 @@ class VisitControllerTest {
 
     @Test
     void processNewVisitFormSuccess() throws Exception {
+
         when(petService.findById(anyLong())).thenReturn(pet);
 
         mockMvc.perform(post("/owners/1/pets/1/visits/new")
