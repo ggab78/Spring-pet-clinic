@@ -1,6 +1,7 @@
 package com.gabriel.springpetclinic.controllers;
 
 import com.gabriel.springpetclinic.model.Owner;
+import com.gabriel.springpetclinic.model.OwnerCommand;
 import com.gabriel.springpetclinic.services.OwnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +21,7 @@ import java.util.Set;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,12 +33,6 @@ class OwnerControllerTest {
 
     @Mock
     OwnerService ownerService;
-
-    @Mock
-    Model model;
-
-    @Mock
-    ModelAndView modelAndView;
 
     @Mock
     BindingResult bindingResult;
@@ -109,26 +103,29 @@ class OwnerControllerTest {
     @Test
     void editOwner() throws Exception {
 
-        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(3L).build());
+        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().firstName("stf").build());
 
         mockMvc.perform(get("/owners/1/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("owners/createOrUpdateOwnerForm"))
                 .andExpect(model().attributeExists("owner"))
-                .andExpect(model().attribute("owner", hasProperty("id", is(3L))));
+                .andExpect(model().attribute("owner", hasProperty("firstName", is("stf"))));
     }
 
     @Test
     void editOwnerProcess() throws Exception {
 
-        Owner source = Owner.builder().firstName("steve").lastName("jobs").build();
+        OwnerCommand source = OwnerCommand.builder().firstName("steve").lastName("jobs").build();
         Owner existing = Owner.builder().firstName("???").lastName("???").id(5L).build();
+        Owner savedOwner = Owner.builder().firstName("steve").lastName("jobs").id(5L).build();
 
         when(ownerService.findById(anyLong())).thenReturn(existing);
+        when(ownerService.save(any())).thenReturn(savedOwner);
 
-        String str = ownerController.editOwnerProcess(source,5L, bindingResult);
+        String str = ownerController.editOwnerProcess(source, bindingResult, 1L);
 
-        assertEquals(source.getLastName(), existing.getLastName());
+        assertEquals(source.getLastName(), savedOwner.getLastName());
+
         assertEquals("redirect:/owners/5", str);
 
         mockMvc.perform(post("/owners/1/edit")
@@ -141,6 +138,21 @@ class OwnerControllerTest {
                 .andExpect(view().name("redirect:/owners/5"));
     }
 
+
+
+    @Test
+    void editOwnerProcessError() throws Exception {
+
+        mockMvc.perform(post("/owners/1/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("lastName", "some")
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"));
+    }
+
+
+
     @Test
     void newOwner() throws Exception{
 
@@ -152,7 +164,7 @@ class OwnerControllerTest {
     }
 
     @Test
-    void newOwnerProcess() throws Exception {
+    void newOwnerProcessSuccess() throws Exception {
 
         Owner source = Owner.builder().id(9L).build();
         when(ownerService.save(ArgumentMatchers.any())).thenReturn(source);
@@ -167,4 +179,20 @@ class OwnerControllerTest {
 
         verify(ownerService).save(ArgumentMatchers.any());
     }
+
+    @Test
+    void newOwnerProcessError() throws Exception {
+
+        mockMvc.perform(post("/owners/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("lastName", "some")
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("owner"))
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"));
+
+        verifyZeroInteractions(ownerService);
+    }
+
 }

@@ -7,6 +7,7 @@ import com.gabriel.springpetclinic.services.OwnerService;
 import com.gabriel.springpetclinic.services.PetService;
 import com.gabriel.springpetclinic.services.PetTypeService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping("/owners/{ownerId}")
@@ -61,7 +63,7 @@ public class PetController {
     }
 
     @PostMapping("/pets/new")
-    public String processNewPetForm(Owner owner, @Valid Pet pet, BindingResult result, Model model) {
+    public String processNewPetForm(Owner owner, @Valid @ModelAttribute("pet") Pet pet, BindingResult result) {
 
         if (pet.isNew() && owner.findPet(pet.getName(), pet.getBirthDate(),pet.getPetType()) != null){
             result.rejectValue("name", "duplicate", "already exists");
@@ -69,11 +71,9 @@ public class PetController {
 
         owner.addPet(pet);
         if (result.hasErrors()) {
-            model.addAttribute("pet", pet);
             return "pets/createOrUpdatePetForm";
         } else {
             this.petService.save(pet);
-            //this.petTypeService.save(pet.getPetType());
             return "redirect:/owners/"+owner.getId();
         }
     }
@@ -85,11 +85,10 @@ public class PetController {
     }
 
     @PostMapping("/pets/{petId}/edit")
-    public String processUpdateForm(@PathVariable Long petId, Owner owner, @Valid Pet pet, BindingResult result, Model model) {
+    public String processUpdateForm(@PathVariable Long petId, Owner owner, @Valid @ModelAttribute("pet") Pet pet, BindingResult result) {
 
         if (result.hasErrors()) {
-            pet.setOwner(owner);
-            model.addAttribute("pet", pet);
+//            pet.setOwner(owner);
             return "pets/createOrUpdatePetForm";
         } else {
             Pet actualPet = petService.findById(petId);
@@ -97,7 +96,6 @@ public class PetController {
             actualPet.setBirthDate(pet.getBirthDate());
             actualPet.setPetType(pet.getPetType());
             this.petService.save(actualPet);
-            //this.petTypeService.save(actualPet.getPetType());
             return "redirect:/owners/"+owner.getId();
         }
     }

@@ -99,7 +99,7 @@ class PetControllerTest {
         //when(petService.save(ArgumentMatchers.any())).thenReturn(pet);
         when(ownerService.findById(ArgumentMatchers.anyLong())).thenReturn(owner);
 
-        petController.processNewPetForm(owner, pet, bindingResult, model);
+        petController.processNewPetForm(owner, pet, bindingResult);
 
         verify(petService).save(ArgumentMatchers.any());
 
@@ -121,7 +121,6 @@ class PetControllerTest {
 
         mockMvc.perform(post("/owners/1/pets/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("name", "Betty")
                 .param("birthDate", "2015-02-12")
         )
                 .andExpect(model().attributeHasNoErrors("owner"))

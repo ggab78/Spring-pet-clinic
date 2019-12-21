@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+
 @Getter
 @Setter
 @NoArgsConstructor

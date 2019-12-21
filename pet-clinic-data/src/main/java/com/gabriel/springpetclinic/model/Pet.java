@@ -53,9 +53,11 @@ public class Pet extends BaseEntity{
     }
 
     public Visit findVisit(String description, LocalDate date){
-        for(Visit visit : visits){
-            if(visit.getDescription().equals(description) && visit.getDate().equals(date)){
-                return visit;
+        if(description != null && date!=null) {
+            for (Visit visit : visits) {
+                if (visit.getDescription().equals(description) && visit.getDate().equals(date)) {
+                    return visit;
+                }
             }
         }
         return null;

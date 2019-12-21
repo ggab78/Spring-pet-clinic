@@ -1,20 +1,20 @@
 package com.gabriel.springpetclinic.controllers;
 
 import com.gabriel.springpetclinic.model.Owner;
+import com.gabriel.springpetclinic.model.OwnerCommand;
 import com.gabriel.springpetclinic.services.OwnerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @RequestMapping({"/owners"})
 @Controller
 public class OwnerController {
@@ -71,37 +71,37 @@ private final OwnerService ownerService;
 
     @RequestMapping("/{ownerId}/edit")
     public String editOwner(@PathVariable Long ownerId, Model model) {
-        model.addAttribute("owner", ownerService.findById(ownerId));
+        model.addAttribute("owner", new OwnerCommand().OwnerToOwnerCommand(ownerService.findById(ownerId)));
         return "owners/createOrUpdateOwnerForm";
     }
 
     @PostMapping("/{ownerId}/edit")
-    public String editOwnerProcess(@Valid Owner source, @PathVariable Long ownerId, BindingResult result) {
+    public String editOwnerProcess(@Valid @ModelAttribute("owner") OwnerCommand source, BindingResult result, @PathVariable Long ownerId) {
+    //BindingResult must be directly after ModelAttribute
+
         if(result.hasErrors()){
             return "owners/createOrUpdateOwnerForm";
         }else{
             Owner existingOwner = ownerService.findById(ownerId);
-            existingOwner.setFirstName(source.getFirstName());
-            existingOwner.setLastName(source.getLastName());
-            existingOwner.setCity(source.getCity());
-            existingOwner.setTelephone(source.getTelephone());
-            existingOwner.setAddress(source.getAddress());
-            return "redirect:/owners/"+existingOwner.getId();
+            existingOwner = source.OwnerCommandToOwner(existingOwner);
+            Owner savedOwner = ownerService.save(existingOwner);
+            return "redirect:/owners/" + savedOwner.getId();
         }
     }
 
     @RequestMapping("/new")
     public String newOwner(Model model) {
-        model.addAttribute("owner", new Owner());
+        model.addAttribute("owner", new OwnerCommand());
         return "owners/createOrUpdateOwnerForm";
     }
 
     @PostMapping("/new")
-    public String newOwnerProcess(@Valid Owner source, BindingResult result) {
+    public String newOwnerProcess(@Valid @ModelAttribute("owner") OwnerCommand source, BindingResult result) {
+
         if(result.hasErrors()){
             return "owners/createOrUpdateOwnerForm";
         }else{
-        Owner savedOwner = ownerService.save(source);
+        Owner savedOwner = ownerService.save(source.OwnerCommandToOwner(new Owner()));
         return "redirect:/owners/"+savedOwner.getId();
         }
     }
