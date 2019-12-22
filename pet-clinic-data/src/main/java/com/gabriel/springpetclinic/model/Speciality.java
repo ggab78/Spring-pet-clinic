@@ -1,5 +1,6 @@
 package com.gabriel.springpetclinic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.CascadeType;
@@ -16,8 +17,10 @@ import java.util.Set;
 @Entity
 public class Speciality extends BaseEntity {
 
+
+    //Annotation for json to discard vets. if not json turns round
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "specialities")
     private Set<Vet> vets = new HashSet<>();
     private String description;
-
 }

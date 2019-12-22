@@ -1,5 +1,6 @@
 package com.gabriel.springpetclinic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.CascadeType;
@@ -22,6 +23,7 @@ public class Owner extends Person {
     private String city;
     private String telephone;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Pet> pets = new HashSet<>();
 

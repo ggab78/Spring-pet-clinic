@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Set;
 
 @Slf4j
 @RequestMapping({"/owners"})
@@ -104,5 +105,10 @@ private final OwnerService ownerService;
         Owner savedOwner = ownerService.save(source.OwnerCommandToOwner(new Owner()));
         return "redirect:/owners/"+savedOwner.getId();
         }
+    }
+
+    @GetMapping("/api/owners")
+    public @ResponseBody Set<Owner> getJsonOwners(){
+        return ownerService.findAll();
     }
 }
